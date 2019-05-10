@@ -9,7 +9,7 @@ A simple yet relatively powerful tool that copies lines from text files to your 
 
 * Place `FileHook.NET.exe` in its own folder.
 * To open a script, click on `Select script...` or `File -> Open...`. 
-* To advance the script, press on `Next line`, or if you have an XInput controller plugged in, click on `Tools -> Enable XInput` and follow its instructions.
+* To advance the script, press on `Next line`, or if you have an XInput controller plugged in, click on `Tools -> Enable XInput`, then click your right stick down, d-pad up or A to advance. Click your right stick down to pause advancement.
 * You can also input the line number directly into the textbox labeled `Line:`. Press Enter to jump to line.
 * This program does not have an autosave feature. To save your progress, click on `Save progress` or alternatively `File -> Save progress`.
 * To load your previous saves, click on `File -> Load progress...` or to load the most recent save, click on `File -> Load most recent save`
