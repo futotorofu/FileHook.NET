@@ -22,8 +22,11 @@ namespace FileHook.NET
         private string safeScriptPath; //Script filename. Used both for visuals as well as in the save function.
         private string[] lines; //The entire script file.
         private int lineIndex; //Which line we're on.
+        private readonly string saveDir; //File save directory.
+
 
         X.Gamepad gamepad = null; //XInput support.
+        private bool pauseX = false;
 
         public FileHookForm()
         {
@@ -39,7 +42,7 @@ namespace FileHook.NET
             lineIndexBox.Text = "0";
             //Save function
 
-            string saveDir = Directory.GetCurrentDirectory() + @"\save";
+            saveDir = Environment.CurrentDirectory + @"\save";
 
             if (!Directory.Exists(saveDir))
                 Directory.CreateDirectory(saveDir);
@@ -50,6 +53,11 @@ namespace FileHook.NET
 
             //Related to XInput. We don't want the XInput controller to be polled any longer than it has to.
             FormClosing += FileHookForm_FormClosing;
+
+            if (!X.IsAvailable) //If XInput isn't available
+            {
+                MessageBox.Show("XInput not available.", "Error");
+            }
         }
 
         private void UpdateCurrentLine()  //Takes the current line index, updates the controls, then copies the line onto the clipboard.
@@ -93,28 +101,47 @@ namespace FileHook.NET
                 lineIndex++;
             else //Reached end of file
             {
-                IEnumerator<string> e = Directory.EnumerateFiles(scriptFolder).GetEnumerator();
-                if(e != null && e.MoveNext()) //Loop through the files.
+                IEnumerable<string> e = Directory.EnumerateFiles(scriptFolder);
+                if(e != null)
                 {
-                    string newFile = e.Current.ToString();
+                    List<string> list = e.ToList();
+                    int i = (list.IndexOf(scriptPath) + 1);
+
+                    if (i == list.Count)
+                    {
+                        list = null;
+                        e = null;
+                        return;
+                    }
+                        
+
+                    string newFile = list[i];
                     try
                     {
                         if(newFile.Contains(".txt"))
                         {
                             scriptPath = newFile;
+                            MessageBox.Show(newFile);
                             safeScriptPath = Path.GetFileName(newFile);
                             scriptFolder = scriptPath.Substring(0, scriptPath.Length - safeScriptPath.Length);
                             lines = File.ReadAllLines(scriptPath);
                             fileBox.Text = safeScriptPath;
                             lineIndex = 1;
+                            scriptLineCountLabel.Text = "Script has " + lines.Length + " line(s).";
+                            e = null;
+                            list = null;
                         }
                     }
                     catch (Exception exception)
                     {
                         MessageBox.Show("An error has occurred.\nError message:\n" + exception.Message, "Error");
+                        e = null;
+                        list = null;
                     }
-                } else
+                }
+                else
                 {
+                    e = null;
                     MessageBox.Show("Something's broken.", "FileHook.NET");
                 }
             }
@@ -135,6 +162,7 @@ namespace FileHook.NET
                     fileBox.Text = safeScriptPath;
                     lineIndex = 1;
                     UpdateCurrentLine();
+                    scriptLineCountLabel.Text = "Script has " + lines.Length + " line(s).";
                 }
                 catch (Exception exception)
                 {
@@ -177,41 +205,30 @@ namespace FileHook.NET
 
         private void SaveProgress()
         {
-            string saveInfo = scriptPath + '|' + lineIndex + '|' + safeScriptPath + '|' + scriptFolder; //'|' is the chosen splitting character. It could technically be any letter. 
+            string saveInfo = scriptPath + '|' + lineIndex + '|' + safeScriptPath + '|' + scriptFolder; //'|' is the chosen splitting character. It could technically be any non-letter. 
             //split result 0: Script path. split result 1: line index. split result 2: filename for controls. split result 3: script folder
-            File.WriteAllText(@"save\recent.save", saveInfo);
-            File.WriteAllText(@"save\" + safeScriptPath + ".save" , saveInfo);
+            File.WriteAllText(saveDir + @"\recent.save", saveInfo);
+            File.WriteAllText(saveDir + @"\" + safeScriptPath + ".save" , saveInfo);
         }
 
         private void Gamepad_StateChanged(object sender, EventArgs e) //XInput support.
         {
-            if(gamepad.Dpad_Up_up || gamepad.RStick_up)
+            if (gamepad.LStick_up)
+                pauseX = !pauseX;
+
+            if((gamepad.Dpad_Up_up || gamepad.RStick_up || gamepad.A_up) && !pauseX)
             {
                 NextLine();
             }
         }
 
-        private void XInputBox_CheckedChanged(object sender, EventArgs e) //XInput support.
+        private void EnableXInputToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (XInputBox.Checked)
-            {
-                if (X.IsAvailable)
-                {
-                    gamepad = X.Gamepad_1;
-                    gamepad.StateChanged += Gamepad_StateChanged;
-                    X.StartPolling(gamepad);
-                } else
-                {
-                    MessageBox.Show("XInput not available.", "Error");
-                }
-            } else
-            {
-                if (gamepad != null)
-                {
-                    X.StopPolling(); //Optimization
-                    gamepad = null;
-                } 
-            }
+            gamepad = X.Gamepad_1;
+            gamepad.StateChanged += Gamepad_StateChanged;
+            X.StartPolling(gamepad);
+            enableXInputToolStripMenuItem.Enabled = false;
+            MessageBox.Show("XInput enabled. To pause XInput polling, press down your left stick.", "FileHook.NET", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void LoadProgressToolStripMenuItem_Click(object sender, EventArgs e) //Load progress... option. Loads progress from a chosen file.
@@ -240,9 +257,9 @@ namespace FileHook.NET
 
         private void LoadMostRecentSaveToolStripMenuItem_Click(object sender, EventArgs e) //Load recent.save.
         {
-            if(File.Exists(@"save\recent.save"))
+            if(File.Exists(saveDir + @"\recent.save"))
             {
-                string[] options = (File.ReadAllLines(@"save\recent.save")[0]).Split('|');
+                string[] options = (File.ReadAllLines(saveDir + @"\recent.save")[0]).Split('|');
                 scriptPath = options[0];
                 lineIndex = int.Parse(options[1]);
                 safeScriptPath = options[2];
@@ -263,22 +280,15 @@ namespace FileHook.NET
         
         private void AlwaysOnTopBox_CheckedChanged(object sender, EventArgs e) => TopMost = alwaysOnTopBox.Checked; //To set always on top mode.
 
-        //The methods below are simply references to other methods.
-
-        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("FileHook.NET v1\n\n" +
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e) => MessageBox.Show("FileHook.NET v1.1\n\n" +
                 "A tool to aid in reading Japanese media.\n" +
                 "Original Java program by VLF100. Written by SonoMeme.\n" +
                 "Uses nikvoronin's XInput Wrapper.\n" +
                 "All usernames mentioned above refer to GitHub users.",
                 "About FileHook.NET", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+        private void UsageToolStripMenuItem_Click(object sender, EventArgs e) => System.Diagnostics.Process.Start("https://github.com/SonoMeme/FileHook.NET");
 
-        private void UsageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/SonoMeme/FileHook.NET");
-        }
+        //The methods below are simply references to other methods
 
         private void NextLineButton_Click(object sender, EventArgs e) => NextLine();
 
@@ -291,6 +301,5 @@ namespace FileHook.NET
         private void SaveButton_Click(object sender, EventArgs e) => SaveProgress();
 
         private void SaveProgressToolStripMenuItem_Click(object sender, EventArgs e) => SaveProgress();
-
     }
 }

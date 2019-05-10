@@ -39,7 +39,6 @@
             this.reloadButton = new System.Windows.Forms.Button();
             this.alwaysOnTopBox = new System.Windows.Forms.CheckBox();
             this.blueSkyBox = new System.Windows.Forms.CheckBox();
-            this.XInputBox = new System.Windows.Forms.CheckBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,8 +46,11 @@
             this.loadProgressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveProgressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enableXInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scriptLineCountLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -154,22 +156,12 @@
             this.blueSkyBox.Text = "Blue Sky Mode";
             this.blueSkyBox.UseVisualStyleBackColor = true;
             // 
-            // XInputBox
-            // 
-            this.XInputBox.AutoSize = true;
-            this.XInputBox.Location = new System.Drawing.Point(214, 114);
-            this.XInputBox.Name = "XInputBox";
-            this.XInputBox.Size = new System.Drawing.Size(79, 17);
-            this.XInputBox.TabIndex = 13;
-            this.XInputBox.Text = "Use XInput";
-            this.XInputBox.UseVisualStyleBackColor = true;
-            this.XInputBox.CheckedChanged += new System.EventHandler(this.XInputBox_CheckedChanged);
-            // 
             // menuStrip1
             // 
             this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -225,13 +217,6 @@
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
-            // 
             // usageToolStripMenuItem
             // 
             this.usageToolStripMenuItem.Name = "usageToolStripMenuItem";
@@ -239,12 +224,43 @@
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.UsageToolStripMenuItem_Click);
             // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enableXInputToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // enableXInputToolStripMenuItem
+            // 
+            this.enableXInputToolStripMenuItem.Name = "enableXInputToolStripMenuItem";
+            this.enableXInputToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.enableXInputToolStripMenuItem.Text = "Enable XInput";
+            this.enableXInputToolStripMenuItem.Click += new System.EventHandler(this.EnableXInputToolStripMenuItem_Click);
+            // 
+            // scriptLineCountLabel
+            // 
+            this.scriptLineCountLabel.AutoSize = true;
+            this.scriptLineCountLabel.Location = new System.Drawing.Point(298, 110);
+            this.scriptLineCountLabel.Name = "scriptLineCountLabel";
+            this.scriptLineCountLabel.Size = new System.Drawing.Size(96, 13);
+            this.scriptLineCountLabel.TabIndex = 15;
+            this.scriptLineCountLabel.Text = "Script has 0 line(s).";
+            // 
             // FileHookForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(452, 137);
-            this.Controls.Add(this.XInputBox);
+            this.Controls.Add(this.scriptLineCountLabel);
             this.Controls.Add(this.blueSkyBox);
             this.Controls.Add(this.alwaysOnTopBox);
             this.Controls.Add(this.reloadButton);
@@ -281,7 +297,6 @@
         private System.Windows.Forms.Button reloadButton;
         private System.Windows.Forms.CheckBox alwaysOnTopBox;
         private System.Windows.Forms.CheckBox blueSkyBox;
-        private System.Windows.Forms.CheckBox XInputBox;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
@@ -291,6 +306,9 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadMostRecentSaveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enableXInputToolStripMenuItem;
+        private System.Windows.Forms.Label scriptLineCountLabel;
     }
 }
 
