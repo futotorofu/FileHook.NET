@@ -24,7 +24,6 @@ namespace FileHook.NET
         private int lineIndex; //Which line we're on.
         private readonly string saveDir; //File save directory.
 
-
         X.Gamepad gamepad = null; //XInput support.
         private bool pauseX = false;
 
@@ -68,7 +67,7 @@ namespace FileHook.NET
                 string temp = lines[lineIndex - 1];
                 if(blueSkyBox.Checked) 
                 {
-                    //This is bad code but you cannot make me care right now, I'm not good enough at C# to fix this
+                    //This is bad code but you cannot make me care right now, I'm not good enough at C# to fix this, if there even is a fix
                     temp = Regex.Replace(temp, "\\[name\\]", "");
                     temp = Regex.Replace(temp, "\\[line\\]", "");
                     temp = Regex.Replace(temp, "\\[\\.\\.\\.\\]", "…");
@@ -91,7 +90,7 @@ namespace FileHook.NET
             }
             catch (Exception exception) //If everything fails. If you get this error message, submit an issue. :gero:
             { 
-                MessageBox.Show("That was not supposed to happen.\n" + exception.Message, "Woops");
+                MessageBox.Show("That was not supposed to happen.\n" + exception.ToString(), "Woops");
             }
         }
 
@@ -109,11 +108,8 @@ namespace FileHook.NET
 
                     if (i == list.Count)
                     {
-                        list = null;
-                        e = null;
                         return;
-                    }
-                        
+                    }  
 
                     string newFile = list[i];
                     try
@@ -121,7 +117,7 @@ namespace FileHook.NET
                         if(newFile.Contains(".txt"))
                         {
                             scriptPath = newFile;
-                            MessageBox.Show(newFile);
+                            //MessageBox.Show(newFile); this is for debugg
                             safeScriptPath = Path.GetFileName(newFile);
                             scriptFolder = scriptPath.Substring(0, scriptPath.Length - safeScriptPath.Length);
                             lines = File.ReadAllLines(scriptPath);
@@ -135,14 +131,12 @@ namespace FileHook.NET
                     catch (Exception exception)
                     {
                         MessageBox.Show("An error has occurred.\nError message:\n" + exception.Message, "Error");
-                        e = null;
-                        list = null;
                     }
                 }
                 else
                 {
-                    e = null;
-                    MessageBox.Show("Something's broken.", "FileHook.NET");
+                    //I hope you will never see this message.
+                    MessageBox.Show("Something's severely broken.", "FileHook.NET");
                 }
             }
             UpdateCurrentLine();
@@ -205,10 +199,25 @@ namespace FileHook.NET
 
         private void SaveProgress()
         {
+            //TODO: fix redundancy in saves
             string saveInfo = scriptPath + '|' + lineIndex + '|' + safeScriptPath + '|' + scriptFolder; //'|' is the chosen splitting character. It could technically be any non-letter. 
             //split result 0: Script path. split result 1: line index. split result 2: filename for controls. split result 3: script folder
             File.WriteAllText(saveDir + @"\recent.save", saveInfo);
-            File.WriteAllText(saveDir + @"\" + safeScriptPath + ".save" , saveInfo);
+            File.WriteAllText(saveDir + @"\" + safeScriptPath + ".save", saveInfo);
+        }
+
+        private void Reload()
+        {
+            try
+            {
+                Clipboard.SetData(DataFormats.Text, (Object)"");
+                System.Threading.Thread.Sleep(15);
+                Clipboard.SetData(DataFormats.Text, (Object)lineBox.Text);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("sås");
+            }
         }
 
         private void Gamepad_StateChanged(object sender, EventArgs e) //XInput support.
@@ -219,6 +228,11 @@ namespace FileHook.NET
             if((gamepad.Dpad_Up_up || gamepad.RStick_up || gamepad.A_up) && !pauseX)
             {
                 NextLine();
+            }
+
+            if(gamepad.Dpad_Right_up && !pauseX)
+            {
+                Reload();
             }
         }
 
@@ -247,6 +261,7 @@ namespace FileHook.NET
                     lines = File.ReadAllLines(scriptPath);
 
                     UpdateCurrentLine();
+                    scriptLineCountLabel.Text = "Script has " + lines.Length + " line(s).";
                 }
                 catch (Exception exception)
                 {
@@ -269,6 +284,7 @@ namespace FileHook.NET
                 lines = File.ReadAllLines(scriptPath);
 
                 UpdateCurrentLine();
+                scriptLineCountLabel.Text = "Script has " + lines.Length + " line(s).";
             }
         }
 
@@ -280,7 +296,7 @@ namespace FileHook.NET
         
         private void AlwaysOnTopBox_CheckedChanged(object sender, EventArgs e) => TopMost = alwaysOnTopBox.Checked; //To set always on top mode.
 
-        private void AboutToolStripMenuItem_Click(object sender, EventArgs e) => MessageBox.Show("FileHook.NET v1.1\n\n" +
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e) => MessageBox.Show("FileHook.NET v1.11_test\n\n" +
                 "A tool to aid in reading Japanese media.\n" +
                 "Original Java program by VLF100. Written by SonoMeme.\n" +
                 "Uses nikvoronin's XInput Wrapper.\n" +
@@ -296,7 +312,7 @@ namespace FileHook.NET
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e) => SelectFile();
 
-        private void ReloadButton_Click(object sender, EventArgs e) => UpdateCurrentLine();
+        private void ReloadButton_Click(object sender, EventArgs e) => Reload();
 
         private void SaveButton_Click(object sender, EventArgs e) => SaveProgress();
 
