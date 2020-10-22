@@ -17,7 +17,7 @@ A simple yet relatively powerful tool that copies lines from text files to your 
 * To make sure the window always stays on top, check the `Always on top` box.
 * To clean up untreated scripts, check the `Blue Sky Mode` box. You might have to reload the line. Note that this does not work with every single game.
 
-# [Download](https://github.com/SonoMeme/FileHook.NET/releases/latest/download//FileHook.NET.exe)
+# [Download](https://github.com/futotorofu/FileHook.NET/releases/latest/download//FileHook.NET.exe)
 
 ## Linux installation
 The program should work fine on most versions of WINE, although you may run into more error popups than a Windows user would. Nonetheless, the program is quite stable.  
@@ -39,7 +39,7 @@ Finally, run `WINEPREFIX=~/.wine32 LANG=ja_JP.UTF-8 wine path/to/FileHook.NET.ex
 Open the .sln file in Visual Studio 2019 and hit Start. It has no additional dependencies.
 
 ## Credits
-FileHook.NET: [SonoMeme](https://twitter.com/SonoMeme)
+FileHook.NET: [futotorofu](https://twitter.com/futotorofu)
 
 Original program: [VLF100](https://github.com/VLF100/FileHook)
 
