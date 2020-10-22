@@ -298,7 +298,7 @@ namespace FileHook.NET
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e) => MessageBox.Show("FileHook.NET v1.11_test\n\n" +
                 "A tool to aid in reading Japanese media.\n" +
-                "Original Java program by VLF100. Written by SonoMeme.\n" +
+                "Original Java program by VLF100. Written by futotorofu.\n" +
                 "Uses nikvoronin's XInput Wrapper.\n" +
                 "All usernames mentioned above refer to GitHub users.",
                 "About FileHook.NET", MessageBoxButtons.OK, MessageBoxIcon.Information);
