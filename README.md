@@ -2,10 +2,13 @@
 A simple yet relatively powerful tool that copies lines from text files to your clipboard.
 
 ## Requirements
-.NET Framework 4.5. If you want to use XInput, you need to be running Windows 8 or higher (or on Linux, a fairly recent version of Wine, whether stable or staging) as well as have an XInput compatible controller, such as an Xbox 360 or One controller.
+.NET Framework 4.8. If you want to use XInput, you need to be running Windows 8 or higher (or on Linux, you could compile to native ~~ or use a fairly recent version of Wine, whether stable or staging~~) as well as have an XInput compatible controller, such as an Xbox 360 or One controller.
 
 ## Usage
 **This tool is intended for use in conjunction with browser extensions such as Clipboard Inserter and Yomichan or a program such as Chiitrans Lite. Explaining their use is out of the scope of this document.**
+
+### Blue Sky mode has been removed.
+Blue Sky mode has become unnecessary in this day and age. If you still have untreated scripts, I suggest using [Enorovan's cleaner script](https://gist.github.com/Enorovan/7b1bdef0674c2d30a8238bbb51c0e566).
 
 * Place `FileHook.NET.exe` in its own folder.
 * To open a script, click on `Select script...` or `File -> Open...`. 
@@ -15,11 +18,14 @@ A simple yet relatively powerful tool that copies lines from text files to your 
 * To load your previous saves, click on `File -> Load progress...` or to load the most recent save, click on `File -> Load most recent save`
 * Press the reload button or d-pad right on your XInput controller to copy the line to your clipboard again.
 * To make sure the window always stays on top, check the `Always on top` box.
-* To clean up untreated scripts, check the `Blue Sky Mode` box. You might have to reload the line. Note that this does not work with every single game.
 
 # [Download](https://github.com/futotorofu/FileHook.NET/releases/latest/download//FileHook.NET.exe)
 
 ## Linux installation
+### You can compile .NET apps for Linux now
+In the year 2022, it is possible to compile .NET applications for Linux. Before you try WINE, I suggest simply generating a Japanese locale, installing Japanese fonts for your distro, and compiling the program for Linux from source. Should that fail, I leave the legacy instructions below.
+
+### Legacy instructions
 The program should work fine on most versions of WINE, although you may run into more error popups than a Windows user would. Nonetheless, the program is quite stable.  
 Another thing to keep in mind is the save folder will be located wherever your terminal's working directory is, or wherever your launch script is located for some reason.  
 
@@ -29,7 +35,7 @@ You may want to create a 32-bit wineprefix if you don't already have one. I have
 * Rename your `~/.wine` folder, then run `WINEARCH=win32 winecfg`. This replaces your current wineprefix with a 32-bit one, and leaves a backup of your old wineprefix. Not recommended unless you know what you're doing, although saying this might be redundant.
 
 Install `winetricks` from your distro's repositories.  
-Run `WINEPREFIX=~/.wine32 winetricks dotnet45` to install .NET 4.5, then run `WINEPREFIX=~/.wine32 winetricks corefonts takao` to install Japanese fonts.
+Run `WINEPREFIX=~/.wine32 winetricks dotnet48` to install .NET 4.8, then run `WINEPREFIX=~/.wine32 winetricks corefonts takao` to install Japanese fonts.
 
 Download from the link above and place wherever convenient.
 
@@ -46,6 +52,8 @@ Original program: [VLF100](https://github.com/VLF100/FileHook)
 XInput Wrapper: [nikvoronin](https://github.com/nikvoronin/XInput.Wrapper)
 
 ## Changelog
+* Update to .NET Framework 4.8.
+* Removed Blue Sky mode as it is no longer all that useful.
 * In an effort to fix the bug where checking the "Use XInput" box multiple times caused a controller input to advance multiple lines, as well as a potential memory leak, XInput support has been moved to `Tools -> Enable XInput` from a checkbox on the main form.
 * You can now press A on your XInput controller to advance the script. Also, clicking your left stick down will pause advancement.
 * For contributors, an error in the comments has been fixed.

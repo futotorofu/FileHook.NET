@@ -41,7 +41,7 @@ namespace FileHook.NET
             lineIndexBox.Text = "0";
             //Save function
 
-            saveDir = Environment.CurrentDirectory + @"\save";
+            saveDir = AppDomain.CurrentDomain.BaseDirectory + @"\save";
 
             if (!Directory.Exists(saveDir))
                 Directory.CreateDirectory(saveDir);
@@ -64,28 +64,7 @@ namespace FileHook.NET
             lineIndexBox.Text = lineIndex.ToString();
             try
             {
-                string temp = lines[lineIndex - 1];
-                if(blueSkyBox.Checked) 
-                {
-                    //This is bad code but you cannot make me care right now, I'm not good enough at C# to fix this, if there even is a fix
-                    temp = Regex.Replace(temp, "\\[name\\]", "");
-                    temp = Regex.Replace(temp, "\\[line\\]", "");
-                    temp = Regex.Replace(temp, "\\[\\.\\.\\.\\]", "…");
-                    temp = Regex.Replace(temp, "\\[\\%p\\]", "");
-                    temp = Regex.Replace(temp, "\\[color.+?(?=\\])\\]", "");
-                    temp = Regex.Replace(temp, "\\[margin.+?(?=\\])\\]", "");
-                    temp = Regex.Replace(temp, "③⑤", "―");
-                    temp = Regex.Replace(temp, "\\[\\%e\\]", "");
-                    temp = Regex.Replace(temp, "\\[ruby-base\\]", "");
-                    temp = Regex.Replace(temp, "\\[ruby-text-start\\].*\\[ruby-text-end\\]", "");
-
-                    lineBox.Text = temp;
-
-                } else
-                {
-                    lineBox.Text = temp;
-                }
-
+                lineBox.Text = lines[lineIndex - 1];
                 Clipboard.SetData(DataFormats.Text, (Object)lineBox.Text); //We're pulling the line from the textbox to save on headaches. This theoretically could cause issues with insanely long lines, but that's extremely unlikely.
             }
             catch (Exception exception) //If everything fails. If you get this error message, submit an issue. :gero:
@@ -296,13 +275,12 @@ namespace FileHook.NET
         
         private void AlwaysOnTopBox_CheckedChanged(object sender, EventArgs e) => TopMost = alwaysOnTopBox.Checked; //To set always on top mode.
 
-        private void AboutToolStripMenuItem_Click(object sender, EventArgs e) => MessageBox.Show("FileHook.NET v1.11_test\n\n" +
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e) => MessageBox.Show("FileHook.NET v1.12_test\n\n" +
                 "A tool to aid in reading Japanese media.\n" +
                 "Original Java program by VLF100. Written by futotorofu.\n" +
-                "Uses nikvoronin's XInput Wrapper.\n" +
-                "All usernames mentioned above refer to GitHub users.",
+                "Uses nikvoronin's XInput Wrapper.",
                 "About FileHook.NET", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        private void UsageToolStripMenuItem_Click(object sender, EventArgs e) => System.Diagnostics.Process.Start("https://github.com/SonoMeme/FileHook.NET");
+        private void UsageToolStripMenuItem_Click(object sender, EventArgs e) => System.Diagnostics.Process.Start("https://github.com/futotorofu/FileHook.NET");
 
         //The methods below are simply references to other methods
 
